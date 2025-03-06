@@ -2,12 +2,15 @@ pipeline {
     agent any
 
     environment {
+        PATH = "/usr/local/bin:/opt/homebrew/bin:$PATH"
         DOCKER_IMAGE = 'pytest-perf:latest'
     }
 
     stages {
         stage('Build Docker Image') {
             steps {
+                sh 'which docker'  // For debugging, confirm Jenkins can see docker
+                sh 'which minikube'  // For debugging, confirm Jenkins can see minikube
                 sh 'eval $(minikube docker-env)'  // Make sure Jenkins talks to Minikube Docker
                 sh 'docker build -t pytest-perf:latest .'
             }
