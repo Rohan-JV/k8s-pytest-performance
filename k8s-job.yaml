@@ -1,0 +1,15 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: pytest-performance-parallel-job
+spec:
+  parallelism: 3        # 3 pods at the same time
+  completions: 3        # Total 3 pods will run (each one a shard)
+  template:
+    spec:
+      containers:
+      - name: pytest-runner
+        image: pytest-perf:latest
+        command: ["pytest"]
+        args: ["tests/test_performance_$(SHARD_INDEX).py"]
+      restartPolicy: Never
